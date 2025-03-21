@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="https://cdn.worldvectorlogo.com/logos/pokemon-6.svg" />
         <link rel="apple-touch-icon" href="https://cdn.worldvectorlogo.com/logos/pokemon-6.svg" />
-        <title>Pokemon App</title>
+        <title>Pokémon Teams</title>
         <meta name="description" content="Pokemon application" />
       </head>
       <body>
