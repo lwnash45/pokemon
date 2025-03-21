@@ -2,14 +2,11 @@
 
 import React, { useState } from 'react';
 import {
-  Card,
   CardMedia,
   CardContent,
   Typography,
   Box,
   Chip,
-  IconButton,
-  Tooltip,
   Checkbox,
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -113,7 +110,7 @@ export function PokemonCard({
           icon={<FilterAltIcon color="primary" />}
           tooltipTitle="Similar search"
           onClick={handleFilterClick}
-          position={{ top: '16px', right: '16px' }}
+          position={{ top: '8px', right: '8px' }}
           isVisible={isHovered}
         />
 
@@ -121,7 +118,7 @@ export function PokemonCard({
           icon={<FolderIcon color="primary" />}
           tooltipTitle="Add to team"
           onClick={handleAddToTeamClick}
-          position={{ bottom: '16px', right: '16px' }}
+          position={{ bottom: '8px', right: '8px' }}
           isVisible={isHovered}
         />
 

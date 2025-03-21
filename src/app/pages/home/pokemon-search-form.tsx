@@ -22,6 +22,8 @@ interface PokemonSearchFormProps {
   loading: boolean;
   onSearch: (query: string) => void;
   onTypeFilter: (types: string[]) => void;
+  selectedTypes: string[];
+  setSelectedTypes: (types: string[]) => void;
   showCreateTeamButton?: boolean;
   onCreateTeamClick?: () => void;
 }
@@ -32,9 +34,10 @@ export function PokemonSearchForm({
   onTypeFilter,
   showCreateTeamButton = false,
   onCreateTeamClick,
+  selectedTypes,
+  setSelectedTypes,
 }: PokemonSearchFormProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);

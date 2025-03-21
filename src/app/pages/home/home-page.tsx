@@ -35,6 +35,7 @@ export default function HomePage({ navigateToTeams }: { navigateToTeams?: () => 
   );
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [selectedPokemonList, setSelectedPokemonList] = useState<PokemonDetailed[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   const mainContentWidth = useMemo(
     () => (detailDrawerOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : '100%'),
@@ -93,6 +94,11 @@ export default function HomePage({ navigateToTeams }: { navigateToTeams?: () => 
     },
     [getPokemonByType, searchPokemon]
   );
+
+  const handleClickPokemonFilter = useCallback((types: string[]) => {
+    setSelectedTypes(types);
+    handleTypeFilter(types);
+  }, [handleTypeFilter]);
 
   const handlePokemonClick = useCallback((pokemon: PokemonDetailed) => {
     setSelectedPokemon(pokemon);
@@ -180,14 +186,7 @@ export default function HomePage({ navigateToTeams }: { navigateToTeams?: () => 
     if (navigateToTeams) {
       navigateToTeams();
     }
-  }, [
-    newTeamName,
-    selectedPokemonList,
-    showSnackbar,
-    selectedTeamId,
-    addToTeamDialogOpen,
-    navigateToTeams,
-  ]);
+  }, [newTeamName, selectedPokemonList, showSnackbar, addToTeamDialogOpen, navigateToTeams]);
 
   return (
     <Box
@@ -221,6 +220,8 @@ export default function HomePage({ navigateToTeams }: { navigateToTeams?: () => 
             onTypeFilter={handleTypeFilter}
             showCreateTeamButton={selectedPokemonList.length > 0}
             onCreateTeamClick={handleClickCreateTeamButton}
+            selectedTypes={selectedTypes}
+            setSelectedTypes={setSelectedTypes}
           />
 
           {error && (
@@ -267,7 +268,7 @@ export default function HomePage({ navigateToTeams }: { navigateToTeams?: () => 
                   <PokemonCard
                     pokemon={detailedPokemon}
                     onClick={handlePokemonClick}
-                    onFilterByTypes={handleTypeFilter}
+                    onFilterByTypes={handleClickPokemonFilter}
                     onAddToTeam={handleDirectAddToTeam}
                     selectable={true}
                     onSelectChange={handlePokemonSelectChange}
