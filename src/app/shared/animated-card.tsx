@@ -1,6 +1,6 @@
 import { Card, CardContent, CardProps } from '@mui/material';
 import { motion } from 'framer-motion';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, memo } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 interface AnimatedCardProps {
@@ -18,7 +18,7 @@ interface AnimatedCardProps {
   transitionDuration?: number;
 }
 
-export function AnimatedCard({
+export const AnimatedCard = memo(function AnimatedCard({
   children,
   contentPadding = true,
   cardProps,
@@ -40,15 +40,17 @@ export function AnimatedCard({
     [theme, cardProps?.sx]
   );
 
+  const motionAnimationProps = useMemo(() => ({
+    initial: initialAnimation,
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: transitionDuration }
+  }), [initialAnimation, transitionDuration]);
+
   return (
-    <motion.div
-      initial={initialAnimation}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: transitionDuration }}
-    >
+    <motion.div {...motionAnimationProps}>
       <Card sx={cardStyles} whileHover={hoverAnimation} component={motion.div} {...cardProps}>
         {contentPadding ? <CardContent>{children}</CardContent> : children}
       </Card>
     </motion.div>
   );
-}
+});

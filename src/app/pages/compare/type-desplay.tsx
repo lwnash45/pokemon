@@ -1,5 +1,5 @@
-import { Box, Typography, Card, CardContent, Chip } from '@mui/material';
-import { useTypeColor } from '../../../lib/utils/type-utils';
+import { Box, Typography, Card, CardContent } from '@mui/material';
+import { ColorChip } from '../../shared/color-chip';
 
 interface TypeDisplayProps {
   title: string;
@@ -25,8 +25,3 @@ export function TypeDisplay({ title, types }: TypeDisplayProps) {
     </Card>
   );
 }
-
-const ColorChip = ({ type }: { type: string }) => {
-  const color = useTypeColor(type);
-  return <Chip label={type} sx={{ bgcolor: color, color: 'white' }} />;
-};

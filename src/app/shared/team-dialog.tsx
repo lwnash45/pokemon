@@ -6,7 +6,7 @@ import {
   Button,
   TextField,
 } from '@mui/material';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, memo } from 'react';
 
 interface TeamDialogProps {
   open: boolean;
@@ -25,7 +25,7 @@ interface TeamDialogProps {
  * A reusable dialog component for team creation and editing
  * Compatible with both home page and teams page usage patterns
  */
-export function TeamDialog({
+export const TeamDialog = memo(function TeamDialog({
   open,
   title = 'Create New Team',
   teamName,
@@ -48,6 +48,11 @@ export function TeamDialog({
     [saveButtonText, title]
   );
 
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => onTeamNameChange(e.target.value),
+    [onTeamNameChange]
+  );
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>
@@ -59,7 +64,7 @@ export function TeamDialog({
           fullWidth
           variant="outlined"
           value={teamName}
-          onChange={e => onTeamNameChange(e.target.value)}
+          onChange={handleNameChange}
         />
       </DialogContent>
       <DialogActions sx={{ paddingRight: 2, paddingLeft: 2, paddingBottom: 2 }}>
@@ -70,4 +75,4 @@ export function TeamDialog({
       </DialogActions>
     </Dialog>
   );
-}
+});

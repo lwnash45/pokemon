@@ -12,11 +12,10 @@ import {
   ListItemText,
   Button,
   IconButton,
-  Paper,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { PokemonDetailed } from '../../lib/dto/pokemon-dto';
-import { useTypeColor } from '../../lib/utils/type-utils';
+import { ColorChip } from './color-chip';
 
 interface PokemonDetailDrawerProps {
   pokemon: PokemonDetailed | null;
@@ -153,9 +152,3 @@ export function PokemonDetailDrawer({
     </Drawer>
   );
 }
-
-const ColorChip = ({ type }: { type: string }) => {
-  const color = useTypeColor(type);
-  
-  return <Chip label={type} sx={{ bgcolor: color, color: 'white' }} />;
-};

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Snackbar, Alert, AlertColor } from '@mui/material';
+import React, { memo } from 'react';
+import { Snackbar, Alert } from '@mui/material';
 
 /**
  * Enum for snackbar alert severity levels
@@ -19,7 +19,7 @@ interface SnackbarAlertProps {
   autoHideDuration?: number;
 }
 
-export function SnackbarAlert({
+export const SnackbarAlert = memo(function SnackbarAlert({
   open,
   message,
   severity = SnackbarSeverity.SUCCESS,
@@ -38,4 +38,4 @@ export function SnackbarAlert({
       </Alert>
     </Snackbar>
   );
-}
+});

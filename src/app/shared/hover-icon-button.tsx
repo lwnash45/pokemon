@@ -1,6 +1,6 @@
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { Theme } from '@mui/material/styles';
 
 interface HoverIconButtonProps {
@@ -16,7 +16,7 @@ interface HoverIconButtonProps {
   isVisible: boolean;
 }
 
-export function HoverIconButton({
+export const HoverIconButton = memo(function HoverIconButton({
   icon,
   tooltipTitle,
   onClick,
@@ -46,4 +46,4 @@ export function HoverIconButton({
       </IconButton>
     </Tooltip>
   );
-}
+});

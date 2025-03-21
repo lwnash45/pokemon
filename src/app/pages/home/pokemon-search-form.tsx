@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo, useMemo } from 'react';
 import {
   Box,
   TextField,
@@ -6,17 +6,16 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Chip,
   SelectChangeEvent,
   InputAdornment,
   IconButton,
   Button,
 } from '@mui/material';
-import { useTypeColor } from '../../../lib/utils/type-utils';
 import { ALL_POKEMON_TYPES } from '../../../lib/types/pokemon-types';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import { ColorChip } from '../../shared/color-chip';
 
 interface PokemonSearchFormProps {
   loading: boolean;
@@ -28,7 +27,7 @@ interface PokemonSearchFormProps {
   onCreateTeamClick?: () => void;
 }
 
-export function PokemonSearchForm({
+export const PokemonSearchForm = memo(function PokemonSearchForm({
   loading,
   onSearch,
   onTypeFilter,
@@ -39,28 +38,71 @@ export function PokemonSearchForm({
 }: PokemonSearchFormProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
     if (event.target.value.trim() === '') {
       onSearch('');
     }
-  };
+  }, [onSearch]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     onSearch(searchQuery);
-  };
+  }, [onSearch, searchQuery]);
 
-  const handleTypesChange = (event: SelectChangeEvent<string[]>) => {
+  const handleTypesChange = useCallback((event: SelectChangeEvent<string[]>) => {
     const types = event.target.value as string[];
     setSelectedTypes(types);
     onTypeFilter(types);
-  };
+  }, [onTypeFilter, setSelectedTypes]);
 
-  const handleClearTypes = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClearTypes = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setSelectedTypes([]);
     onTypeFilter([]);
-  };
+  }, [onTypeFilter, setSelectedTypes]);
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }, [handleSearch]);
+
+  const searchEndAdornment = useMemo(() => (
+    <InputAdornment position="end">
+      <IconButton
+        aria-label="search"
+        onClick={handleSearch}
+        disabled={loading}
+        size="small"
+      >
+        <SearchIcon fontSize="small" />
+      </IconButton>
+    </InputAdornment>
+  ), [handleSearch, loading]);
+
+  const typeSelectEndAdornment = useMemo(() => 
+    selectedTypes.length > 0 ? (
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="clear types"
+          onClick={handleClearTypes}
+          edge="end"
+          size="small"
+          sx={{ mr: 0.5 }}
+        >
+          <ClearIcon fontSize="small" />
+        </IconButton>
+      </InputAdornment>
+    ) : null
+  , [selectedTypes.length, handleClearTypes]);
+
+  const renderTypeChips = useCallback((selected: unknown) => (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+      {(selected as string[]).map(type => (
+        <ColorChip key={type} type={type} />
+      ))}
+    </Box>
+  ), []);
 
   return (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -69,22 +111,11 @@ export function PokemonSearchForm({
         variant="outlined"
         value={searchQuery}
         onChange={handleSearchChange}
-        onKeyPress={e => e.key === 'Enter' && handleSearch()}
+        onKeyPress={handleKeyPress}
         sx={{ flexGrow: 1, minWidth: '200px' }}
         size="small"
         InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="search"
-                onClick={handleSearch}
-                disabled={loading}
-                size="small"
-              >
-                <SearchIcon fontSize="small" />
-              </IconButton>
-            </InputAdornment>
-          ),
+          endAdornment: searchEndAdornment,
         }}
       />
 
@@ -98,28 +129,8 @@ export function PokemonSearchForm({
             onChange={handleTypesChange}
             multiple
             size="small"
-            renderValue={selected => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {(selected as string[]).map(type => (
-                  <ColorChip key={type} type={type} />
-                ))}
-              </Box>
-            )}
-            endAdornment={
-              selectedTypes.length > 0 ? (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="clear types"
-                    onClick={handleClearTypes}
-                    edge="end"
-                    size="small"
-                    sx={{ mr: 0.5 }}
-                  >
-                    <ClearIcon fontSize="small" />
-                  </IconButton>
-                </InputAdornment>
-              ) : null
-            }
+            renderValue={renderTypeChips}
+            endAdornment={typeSelectEndAdornment}
             IconComponent={() => null}
           >
             {ALL_POKEMON_TYPES.map(type => (
@@ -144,9 +155,5 @@ export function PokemonSearchForm({
       </Box>
     </Box>
   );
-}
+});
 
-const ColorChip = ({ type }: { type: string }) => {
-  const color = useTypeColor(type);
-  return <Chip label={type} sx={{ bgcolor: color, color: 'white' }} />;
-};

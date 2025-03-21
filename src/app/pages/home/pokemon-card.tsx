@@ -1,20 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import {
   CardMedia,
   CardContent,
   Typography,
   Box,
-  Chip,
   Checkbox,
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FolderIcon from '@mui/icons-material/Folder';
 import { PokemonDetailed } from '../../../lib/dto/pokemon-dto';
-import { useTypeColor } from '../../../lib/utils/type-utils';
 import { AnimatedCard } from '../../shared/animated-card';
 import { HoverIconButton } from '../../shared/hover-icon-button';
+import { ColorChip } from '../../shared/color-chip';
 
 interface PokemonCardProps {
   pokemon: PokemonDetailed;
@@ -25,7 +24,7 @@ interface PokemonCardProps {
   onSelectChange?: (pokemon: PokemonDetailed, selected: boolean) => void;
 }
 
-export function PokemonCard({
+export const PokemonCard = memo(function PokemonCard({
   pokemon,
   onClick,
   onFilterByTypes,
@@ -36,37 +35,43 @@ export function PokemonCard({
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
-  const handleFilterClick = (e: React.MouseEvent) => {
+  const handleFilterClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (onFilterByTypes) {
       const pokemonTypes = pokemon.types.map(t => t.type.name);
       onFilterByTypes(pokemonTypes);
     }
-  };
+  }, [onFilterByTypes, pokemon.types]);
 
-  const handleAddToTeamClick = (e: React.MouseEvent) => {
+  const handleAddToTeamClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (onAddToTeam) {
       onAddToTeam(pokemon);
     }
-  };
+  }, [onAddToTeam, pokemon]);
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     const selected = e.target.checked;
     setIsSelected(selected);
     if (onSelectChange) {
       onSelectChange(pokemon, selected);
     }
-  };
+  }, [onSelectChange, pokemon]);
+
+  const handleCardClick = useCallback(() => onClick(pokemon), [onClick, pokemon]);
+  
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
   return (
     <AnimatedCard
       contentPadding={false}
       cardProps={{
-        onClick: () => onClick(pokemon),
-        onMouseEnter: () => setIsHovered(true),
-        onMouseLeave: () => setIsHovered(false),
+        onClick: handleCardClick,
+        onMouseEnter: handleMouseEnter,
+        onMouseLeave: handleMouseLeave,
         sx: {
           cursor: 'pointer',
           height: '100%',
@@ -154,9 +159,4 @@ export function PokemonCard({
       </>
     </AnimatedCard>
   );
-}
-
-const ColorChip = ({ type }: { type: string }) => {
-  const color = useTypeColor(type);
-  return <Chip label={type} sx={{ bgcolor: color, color: 'white' }} />;
-};
+});

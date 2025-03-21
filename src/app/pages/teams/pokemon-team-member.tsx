@@ -1,11 +1,11 @@
-import { Card, CardMedia, CardContent, Typography, Box, Chip } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { PokemonDetailed } from '../../../lib/dto/pokemon-dto';
-import { useTypeColor } from '../../../lib/utils/type-utils';
 import { useState } from 'react';
 import { HoverIconButton } from '../../shared/hover-icon-button';
 import { SnackbarAlert, SnackbarSeverity } from '../../shared/snackbar-alert';
+import { ColorChip } from '../../shared/color-chip';
 
 interface PokemonTeamMemberProps {
   pokemon: PokemonDetailed;
@@ -88,8 +88,3 @@ export function PokemonTeamMember({ pokemon, onRemove, onPokemonClick }: Pokemon
     </Card>
   );
 }
-
-const ColorChip = ({ type }: { type: string }) => {
-  const color = useTypeColor(type);
-  return <Chip label={type} sx={{ bgcolor: color, color: 'white' }} />;
-};
