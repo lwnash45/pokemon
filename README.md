@@ -6,7 +6,7 @@ A web application that allows users to browse Pokémon, create teams, and compar
 
 - Browse and search Pokémon by name or type
 - View detailed information about each Pokémon including stats, abilities, and moves
-- Create and manage Pokémon teams with up to 6 Pokémon each
+- Create and manage Pokémon teams of 6
 - Compare teams to analyze strengths and weaknesses
 - Visualize team statistics and type matchups
 
