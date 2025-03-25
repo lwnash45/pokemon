@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import CircleOutlined from '@mui/icons-material/CircleOutlined';
 import { Team } from '../../lib/dto/pokemon-dto';
 import Pokeball from '../svgs/pokeball';

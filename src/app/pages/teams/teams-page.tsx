@@ -40,6 +40,7 @@ export default function TeamsPage() {
     if (teamToDelete) {
       const teamName = teamToDelete.name;
       storageUtils.deleteTeam(id);
+      loadTeams();
       showSnackbar(`Team "${teamName}" deleted successfully!`);
     }
   };
